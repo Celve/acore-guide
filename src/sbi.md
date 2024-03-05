@@ -39,4 +39,34 @@ SBI 作为 supervisor 的接口，其本身主要是在为 supervisor（也就�
 
 ## SBI 实现细节
 
-## SBI 要求
+### UART
+
+不同于 rCore-Tutorial，在 ACore 中，我们要求**自己**实现 SBI 的功能。第一阶段中，我们需要实现一个十分简易的 SBI 来在命令行中打印字符。在此之前，我们首先需要了解 UART。它是一种串行通信设备，用于在计算机和外部设备之间传输数据。在[维基百科](https://en.wikipedia.org/wiki/Universal_asynchronous_receiver-transmitter)中有着更加详细的介绍。在 ACore 中，我们使用的是 QEMU 的 virt 平台，它的串口设备是一个 NS16550A UART。我们需要实现的 SBI 功能是通过 UART 将字符打印到命令行。
+
+我们利用 MMIO 来和串口设备进行通信。[引子](#引子)对于 MMIO 已经有了简单的介绍，我们在这里再补充一些细节。在正式和串口设备通信之前，我们要初始化串口设备，这个过程需要写入一些特定的值到串口设备的寄存器中，而这些寄存器就是通过 MMIO 的方式映射在内存中的。通过这种方式，我们可以与串口设备协定一些最基础的信息，譬如我们是否开启 FIFO 队列（通过 FCR 寄存器），我们是否开启中断（通过 IER 寄存器）等等。
+
+在初始化完成后，我们就可以通过读写串口设备的寄存器来进行输入输出了。我们可以通过读取 RBR 寄存器来获取串口设备接收到的字符，通过写入 THR 寄存器来发送字符，通过读取 LSR 寄存器来获取串口设备的状态。而这些都依赖于 MMIO。
+
+在 QEMU 模拟的 virt 计算机中串口设备寄存器的 MMIO 起始地址为 `0x10000000`，在下表被称为 `base`。连续的 8 个 bit 组成一个寄存器。下表给出了 UART 中每个寄存器的地址和基本含义。
+| I/O Port | Read (DLAB=0)  | Write (DLAB=0) | Read (DLAB=1) | Write (DLAB=1) |
+|----------|----------------|----------------|---------------|----------------|
+| base     | **RBR** receiver buffer | **THR** transmitter holding | **DLL** divisor latch LSB | **DLL** divisor latch LSB |
+| base+1   | **IER** interrupt enable | **IER** interrupt enable | **DLM** divisor latch MSB | **DLM** divisor latch MSB |
+| base+2   | **IIR** interrupt identification | **FCR** FIFO control | **IIR** interrupt identification | **FCR** FIFO control  |
+| base+3   | **LCR** line control | **LCR** line control | **LCR** line control | **LCR** line control |
+| base+4   | **MCR** modem control | **MCR** modem control | **MCR** modem control | **MCR** modem control |
+| base+5   | **LSR** line status | *factory test* | **LSR** line status | *factory test* |
+| base+6   | **MSR** modem status | *not used* | **MSR** modem status | *not used* |
+| base+7   | **SCR** scratch | **SCR** scratch | **SCR** scratch | **SCR** scratch |
+
+介于篇幅有限，寄存器的详细含义以及如何设置请参考[这篇博客](https://www.lammertbies.nl/comm/info/serial-uart).
+
+#### UART 初始化
+
+UART 的初始化可以参考 [xv6](https://github.com/mit-pdos/xv6-riscv/blob/f5b93ef12f7159f74f80f94729ee4faabe42c360/kernel/uart.c#L53)，[recore](https://github.com/Celve/recore/blob/dd95657ba2f0450df904d88488bf0d2c171d09ed/kernel/src/drivers/uart.rs#L130) 和 [uart_16550](https://github.com/rust-osdev/uart_16550/blob/378d468b5f80effc0b53f537fabc2fd73d16449e/src/mmio.rs#L40)。
+
+#### 使用 UART 进行输入输出
+
+使用 UART 输入输出主要和 RBR，THR 和 LSR 寄存器进行交互，具体依旧可以参考[这篇博客](https://www.lammertbies.nl/comm/info/serial-uart)。
+
+之后建议参照 [rCore-Tutorial](https://rcore-os.cn/rCore-Tutorial-Book-v3/chapter1/6print-and-shutdown-based-on-sbi.html#id2) 中的介绍，创建 `print!` 宏与 `println!` 宏，以方便后续的调试。
