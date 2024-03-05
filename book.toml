@@ -1,0 +1,6 @@
+[book]
+authors = ["Linyu Wu", "Lau YeeYu"]
+language = "zh-CN"
+multilingual = true
+src = "src"
+title = "ACore Guide"
