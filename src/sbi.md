@@ -59,7 +59,7 @@ SBI 作为 supervisor 的接口，其本身主要是在为 supervisor（也就�
 | base+6   | **MSR** modem status | *not used* | **MSR** modem status | *not used* |
 | base+7   | **SCR** scratch | **SCR** scratch | **SCR** scratch | **SCR** scratch |
 
-介于篇幅有限，寄存器的详细含义以及如何设置请参考[这篇博客](https://www.lammertbies.nl/comm/info/serial-uart).
+介于篇幅有限，寄存器的详细含义以及如何设置请参考[这篇博客](https://www.lammertbies.nl/comm/info/serial-uart)。
 
 #### UART 初始化
 
