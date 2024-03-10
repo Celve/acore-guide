@@ -70,3 +70,27 @@ UART 的初始化可以参考 [xv6](https://github.com/mit-pdos/xv6-riscv/blob/f
 使用 UART 输入输出主要和 RBR，THR 和 LSR 寄存器进行交互，具体依旧可以参考[这篇博客](https://www.lammertbies.nl/comm/info/serial-uart)。
 
 之后建议参照 [rCore-Tutorial](https://rcore-os.cn/rCore-Tutorial-Book-v3/chapter1/6print-and-shutdown-based-on-sbi.html#id2) 中的介绍，创建 `print!` 宏与 `println!` 宏，以方便后续的调试。
+
+#### 使用 QEMU 进行调试
+
+因为我们不使用 rCore-Tutorial 中的 SBI，所以 QEMU 的启动参数需要做一些调整：
+
+```bash
+qemu-system-riscv64 \
+  -machine virt \
+  -nographic \
+  -bios none \
+  -device loader,file=$KERNEL_BIN,addr=$KERNEL_ENTRY_PA \
+  -s -S
+```
+
+`KERNEL_BIN` 表示编译生成的内核二进制文件，`KERNEL_ENTRY_PA`表示内核的入口地址。`-s -S` 参数表示启动 QEMU 时暂停 CPU，等待 GDB 连接。默认开启 1234 端口。可以利用 GDB 连接 QEMU，进行调试：
+
+```bash
+riscv64-unknown-elf-gdb \
+  -ex "file $KERNEL_ELF" \
+  -ex "set arch riscv:rv64" \
+  -ex "target remote localhost:1234"
+```
+
+`KERNEL_ELF` 表示编译生成的内核 ELF 文件。
