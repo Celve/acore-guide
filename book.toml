@@ -4,3 +4,7 @@ language = "zh-CN"
 multilingual = true
 src = "src"
 title = "ACore Guide"
+
+[output.html]
+git-repository-url = "https://github.com/celve/acore-guide"
+git-repository-icon = "fa-github"
