@@ -73,7 +73,19 @@ UART 的初始化可以参考 [xv6](https://github.com/mit-pdos/xv6-riscv/blob/f
 
 #### 使用 QEMU 进行调试
 
-因为我们不使用 rCore-Tutorial 中的 SBI，所以 QEMU 的启动参数需要做一些调整：
+因为我们不使用 rCore-Tutorial 中的 SBI，linker script 需要作出调整。在 rCore tutorial 给出的 [linker script](https://rcore-os.cn/rCore-Tutorial-Book-v3/chapter1/4first-instruction-in-kernel2.html#id4) 中，其 BASE_ADDRESS 设置为：
+
+```C
+BASE_ADDRESS = 0x80200000;
+```
+
+这是因为 rCore 将 SBI 的二进制文件放在了 `0x80000000` 的位置，所以相应的内核二进制文件被放在了 `0x80200000` 的位置。而在 ACore 中，我们需要自己实现 SBI，所以我们直接将内核二进制文件放在 `0x80000000` 的位置即可。所以 linker script 应该被更改为：
+
+```C
+BASE_ADDRESS = 0x80000000;
+```
+
+同时， QEMU 的启动参数需要做一些调整：
 
 ```bash
 qemu-system-riscv64 \
@@ -84,7 +96,9 @@ qemu-system-riscv64 \
   -s -S
 ```
 
-`KERNEL_BIN` 表示编译生成的内核二进制文件，`KERNEL_ENTRY_PA`表示内核的入口地址。`-s -S` 参数表示启动 QEMU 时暂停 CPU，等待 GDB 连接。默认开启 1234 端口。可以利用 GDB 连接 QEMU，进行调试：
+`KERNEL_BIN` 表示编译生成的内核二进制文件，`KERNEL_ENTRY_PA`表示将内核二进制文件载入到的 QEMU 物理内存上的物理地址。由于 QEMU 会固定跳转到 `0x80000000`，所以这里的 `KERNEL_ENTRY_PA` 应该是 `0x80000000`。
+
+`-s -S` 参数表示启动 QEMU 时暂停 CPU，等待 GDB 连接。默认开启 1234 端口。可以利用 GDB 连接 QEMU，进行调试：
 
 ```bash
 riscv64-unknown-elf-gdb \
@@ -94,3 +108,16 @@ riscv64-unknown-elf-gdb \
 ```
 
 `KERNEL_ELF` 表示编译生成的内核 ELF 文件。
+
+当使用 GDB 进入 QEMU 后，使用 `x /6i` 可以发现进入了 `0x1000`：
+
+```asm
+=> 0x1000:      auipc   t0,0x0
+   0x1004:      add     a2,t0,40
+   0x1008:      csrr    a0,mhartid
+   0x100c:      ld      a1,32(t0)
+   0x1010:      ld      t0,24(t0)
+   0x1014:      jr      t0
+```
+
+`jr t0` 之后会跳到 `0x80000000`，理论上会进入我们的内核，可以继续使用 GDB 进行调试。
