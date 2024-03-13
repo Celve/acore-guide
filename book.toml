@@ -8,3 +8,4 @@ title = "ACore Guide"
 [output.html]
 git-repository-url = "https://github.com/celve/acore-guide"
 git-repository-icon = "fa-github"
+mathjax-support = true
