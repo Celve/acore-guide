@@ -78,6 +78,8 @@ unsafe impl GlobalAlloc for Dummy {
 
 ## Buddy Allocator
 
+### 算法介绍
+
 > The buddy system assumes that memory is of size  2N  for some integer  N . Both free and reserved blocks will always be of size  2k  for  k <= N . At any given time, there might be both free and reserved blocks of various sizes. The buddy system keeps a separate list for free blocks of each size. There can be at most  2k  such lists, because there can only be  2k  distinct block sizes.
 >
 > When a request comes in for m words, we first determine the smallest value of k such that  2k >= m  . A block of size  2k  is selected from the free list for that block size if one exists. The buddy system does not worry about internal fragmentation: The entire block of size  2k  is allocated.
@@ -95,3 +97,13 @@ unsafe impl GlobalAlloc for Dummy {
 以上片段参考自 [Memory Management Tutorial Section 2.3 - Buddy Methods](https://research.cs.vt.edu/AVresearch/MMtutorial/buddy.php)。
 
 还有一些别的参考材料：[wikipedia](https://en.wikipedia.org/wiki/Buddy_memory_allocation)，[recore wiki](https://github.com/Celve/recore/wiki/Allocator#buddy-allocator)。
+
+### 如何开始
+
+首先，我们需要划分一块区域作为内存池。一种简单的方式就是直接使用 `static` 变量，即全局变量：
+
+```rust
+static mut KERNEL_HEAP_SPACE: [u8; KERNEL_HEAP_SIZE] = [0; KERNEL_HEAP_SIZE];
+```
+
+然后在这段空间上实现 buddy allocator。
