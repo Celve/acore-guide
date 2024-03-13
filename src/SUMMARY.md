@@ -7,3 +7,4 @@
   - [Supervisor Binary Interface (SBI)](sbi.md)
   - [特权级切换](privilege_level.md)
   - [页表](page_table.md)
+  - [Memory Allocator](memory_allocator.md)
