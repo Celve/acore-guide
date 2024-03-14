@@ -7,5 +7,6 @@
   - [Supervisor Binary Interface (SBI)](sbi.md)
   - [特权级机制](privilege_level.md)
     - [RISCV 切换特权级原理](riscv_change_privilege.md)
+    - [从 M mode 到 S mode](m_to_s_mode.md)
   - [页表](page_table.md)
   - [Memory Allocator](memory_allocator.md)
