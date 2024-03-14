@@ -5,6 +5,7 @@
 - [内核基础环境](kernel_environment.md)
   - [内核入口](kernel_entrance.md)
   - [Supervisor Binary Interface (SBI)](sbi.md)
-  - [特权级切换](privilege_level.md)
+  - [特权级机制](privilege_level.md)
+    - [RISCV 切换特权级原理](riscv_change_privilege.md)
   - [页表](page_table.md)
   - [Memory Allocator](memory_allocator.md)
