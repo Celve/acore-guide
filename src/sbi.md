@@ -69,6 +69,8 @@ UART 的初始化可以参考 [xv6](https://github.com/mit-pdos/xv6-riscv/blob/f
 
 使用 UART 输入输出主要和 RBR，THR 和 LSR 寄存器进行交互，具体依旧可以参考[这篇博客](https://www.lammertbies.nl/comm/info/serial-uart)。
 
+在与 RBR 等寄存器的交互过程中，需要使用 `volatile` 修饰符，以防止编译器对这些操作进行优化。具体请参考 [volatile](https://docs.rs/volatile/0.5.1/volatile/) crate。
+
 之后建议参照 [rCore-Tutorial](https://rcore-os.cn/rCore-Tutorial-Book-v3/chapter1/6print-and-shutdown-based-on-sbi.html#id2) 中的介绍，创建 `print!` 宏与 `println!` 宏，以方便后续的调试。
 
 #### 使用 QEMU 进行调试
@@ -121,3 +123,11 @@ riscv64-unknown-elf-gdb \
 ```
 
 `jr t0` 之后会跳到 `0x80000000`，理论上会进入我们的内核，可以继续使用 GDB 进行调试。
+
+### TEST
+
+> 在 QEMU 模拟的 virt 计算机中串口设备寄存器的 MMIO 起始地址为 `0x10000000`。
+
+这些信息都可以在 QEMU 的源码中找到，譬如 [virt_uart0](https://github.com/qemu/qemu/blob/7598971167080a8328a1b8e22425839cb4ccf7b7/hw/riscv/virt.c#L97)。找到的方法参考自[这篇文章](https://unix.stackexchange.com/a/758201)。
+
+Shutdown 对应的是 [virt_test](https://github.com/qemu/qemu/blob/7598971167080a8328a1b8e22425839cb4ccf7b7/hw/riscv/virt.c#L88)，其 MMIO 起始地址为 `0x100000`。与寄存器应如何交互需参考其他 SBI 的实现。
