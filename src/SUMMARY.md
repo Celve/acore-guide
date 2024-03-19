@@ -9,4 +9,6 @@
     - [RISCV 切换特权级原理](riscv_change_privilege.md)
     - [从 M mode 到 S mode](m_to_s_mode.md)
   - [页表](page_table.md)
+    - [SV39 机制介绍](page_table_sv39.md)
+    - [SV39 的页表项](page_table_entry.md)
   - [Memory Allocator](memory_allocator.md)
