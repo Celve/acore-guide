@@ -1,4 +1,4 @@
-# Memory Allocator
+# 内存分配器
 
 ## 静态分配和动态分配
 
