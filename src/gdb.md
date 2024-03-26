@@ -107,12 +107,12 @@ unsafe extern "C" fn _start() {
 }
 
 #[no_mangle]
-unsafe extern "C" fn foo() {
+fn foo() {
     todo!()
 }
 
 #[no_mangle]
-unsafe extern "C" fn bar() {
+unsafe fn bar() {
     todo!()
 }
 ```
@@ -198,3 +198,5 @@ Breakpoint 4 at 0x8001c0cc: file src/main.rs, line 98.
 ```plain
 (gdb) c
 ```
+
+****
