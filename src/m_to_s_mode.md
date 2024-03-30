@@ -6,7 +6,7 @@
 
 1. 设置 `mstatus` 寄存器及 `mepc` 寄存器；
 2. 暂时禁用页表；
-3. 启用中断；
+3. 启用中断（为后面时间片调度做准备）；
 4. 配置 Physical Memory Protection，让内核能在 S mode 下访问所有物理内存；
 5. 启用时钟中断；
 6. 调用 mret 指令，切换到 S mode。
