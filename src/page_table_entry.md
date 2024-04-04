@@ -1,6 +1,6 @@
 # SV39 页表项
 
-页表项，用于表示映射信息，其英文位 page table entry（简称为 PTE）。
+页表项，用于表示映射信息，其英文为 page table entry（简称为 PTE）。
 
 页表项如下所示：
 
@@ -34,7 +34,7 @@
 | 1 | 1 | 0 | Reserved for future use. |
 | 1 | 1 | 1 | Read-write-execute page. |
 
-## SV9 的具体翻译过程
+## SV39 的具体翻译过程
 
 在[页表文档](page_table.md)中，我们大致介绍了翻译的流程，所以这里我们只举例中间的某一层页表翻译过程。
 
