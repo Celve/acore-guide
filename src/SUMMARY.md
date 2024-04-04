@@ -1,8 +1,9 @@
 # Summary
 
 - [Schedule](schedule.md)
-- [基础工具](basic_tools.md)
-  - [GDB](gdb.md)
+- [帮助](help.md)
+  - [GDB 操作指南](gdb.md)
+  - [特权寄存器指南](csr.md)
 - [操作系统简介](os_intro.md)
 - [内核基础环境](kernel_environment.md)
   - [内核入口](kernel_entrance.md)
