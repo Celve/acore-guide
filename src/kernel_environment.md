@@ -6,4 +6,10 @@
 
 具体来说，当内核被引导时，我们唯一可以确定的通用寄存器是 pc，包括 sp 在内的其他可写通用寄存器是没有意义的。也就是说，我们甚至没有函数栈。因此，在执行到内核的第一条指令时，我们无法使用任何常规的高级语言，必须使用机器码或者汇编。并利用这些代码设置函数栈。具体请见[内核入口](kernel_entrance.md)部分。
 
-此外，我们还需要一些与硬件相关的支持，具体请见 [Supervisor Binary Interface (SBI) 介绍](sbi.md)。
+接下来，我们还需要一些处理与硬件相关的支持，具体请见 [Supervisor Binary Interface (SBI) 介绍](sbi.md)。
+
+然后，我们需要处理[特权级机制相关](privilege_level.md)的部分，[从 m mode 进入 s mode](m_to_s_mode.md)。
+
+进入 supervisor mode 之后，我们需要[初始化内存分配器](memory_allocator.md)，为内核的页面分配提供服务。
+
+接着，我们需要设置内核的页表。关于 RISCV 下的 SV39 页表机制，请见[页表介绍](page_table.md)。
