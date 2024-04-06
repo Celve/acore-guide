@@ -205,7 +205,7 @@ fn init_devices() {
 当执行完 `b src/main.rs:180` 后，我们可以打印 `hart_id` 的值：
 
 ```plain
-print hart_id
+(gdb) print hart_id
 ```
 
 同时，我们可以利用 `info locals` 来显示所有可供打印的所有局部变量。
