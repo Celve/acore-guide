@@ -38,4 +38,5 @@ RISCV 大致提供这些特权指令：
 - `mie`/`sie` (Machine/Supervisor Interrupt Enable)：中断启用。
 - `mip`/`sip` (Machine/Supervisor Interrupt Pending)：有中断等待。
 - `mscratch`/`sscratch` (Machine/Supervisor Scratch)：用于保存临时数据，可以利用如 `csrrw a0, mscratch, a0` 来交换 mscratch 和通用寄存器的值。
-- `satp` (supervisor address translation and protection register)：用于设置虚拟内存映射规则。
+- `satp` (Supervisor Address Translation and Protection Register)：用于设置虚拟内存映射规则。
+- `mtvec`/`stvec` (Machine/Supervisor Trap Handler Vector)：用于设置 trap 的处理起始点（发生 trap 之后会跳转到这个地址）。
