@@ -191,6 +191,25 @@ Breakpoint 4 at 0x8001c0cc: file src/main.rs, line 98.
 
 将 `$pc` 换成你想要查看的寄存器即可。
 
+### 打印变量
+
+`p` 可以打印某个变量的值。譬如说，我想打印[180行处](https://github.com/Celve/recore/blob/4986f29038c19fc09dde544f86098d732ce34abf/kernel/src/main.rs#L180)的 `hart_id`：
+
+```rust
+fn init_devices() {
+    let hart_id = Processor::hart_id();
+    ...
+}
+```
+
+当执行完 `b src/main.rs:180` 后，我们可以打印 `hart_id` 的值：
+
+```plain
+print hart_id
+```
+
+同时，我们可以利用 `info locals` 来显示所有可供打印的所有局部变量。
+
 ### 执行到断点
 
 `c` 或 `continue` 从当前停止点继续执行程序，直到遇到下一个断点或程序结束：
