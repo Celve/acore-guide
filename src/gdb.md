@@ -155,7 +155,7 @@ Symbol "_start" is at 0x80000000 in a file compiled without debugging.
 Breakpoint 3 at 0x80000000: file src/main.rs, line 67.
 ```
 
-也可以设置在一个函数的某一行，例如在[87行](https://github.com/Celve/recore/blob/4986f29038c19fc09dde544f86098d732ce34abf/kernel/src/main.rs#L88)处（这个函数不需要 `#[no_mangle]`：
+再举一个例子，例如在[87行](https://github.com/Celve/recore/blob/4986f29038c19fc09dde544f86098d732ce34abf/kernel/src/main.rs#L88)处设置断点（这个函数不需要 `#[no_mangle]`：
 
 ```rust
 85 unsafe fn rust_start() -> ! {
@@ -167,7 +167,7 @@ Breakpoint 3 at 0x80000000: file src/main.rs, line 67.
 
 ```gdb
 (gdb) b src/main.rs:88
-Breakpoint 4 at 0x8001c0cc: file src/main.rs, line 98.
+Breakpoint 4 at 0x8001c0cc: file src/main.rs, line 88.
 ```
 
 ### 逐行执行
