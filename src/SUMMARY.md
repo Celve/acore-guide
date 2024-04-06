@@ -14,3 +14,7 @@
   - [内存分配器](memory_allocator.md)
   - [页表](page_table.md)
     - [SV39 的页表项](page_table_entry.md)
+- [应用程序执行环境](app_environment.md)
+  - [记录应用信息](task_struct.md)
+  - [应用地址空间](app_memory_space.md)
+  - [用户态与内核态切换](user_kernel_switch.md)
