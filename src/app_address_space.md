@@ -13,9 +13,9 @@
 - `trampoline`：这是一小段代码，用于在执行系统调用或处理中断时页表的切换以及上下文的切换。
 - `guard page`：guard page 用于在溢出或越界访问时触发异常。
 
-以下展示了 rCore 中的应用地址空间布局：
-
 ## Layout
+
+以下展示了 rCore 中的应用地址空间布局：
 
 ```plain
 +------------------------+ <- end of address space (2^64 Byte)
@@ -41,7 +41,7 @@
 +------------------------+ <- start of address space
 ```
 
-rCore 中的 user stack 是定长的，并不是很优秀的设计。如果可能可以删去 guard page，在 page fault 之后再分配，这样可以节省内存。
+rCore 中的 user stack 是定长的，并不是很优秀的设计。可以删去 guard page，在进程初始时并不分配栈空间，等到程序有需要，触发 page fault 之后再分配，以节省内存。
 
 ## Load ELF
 
