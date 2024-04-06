@@ -18,3 +18,4 @@
   - [记录应用信息](task_struct.md)
   - [应用地址空间](app_address_space.md)
   - [用户态与内核态切换](user_kernel_switch.md)
+    - [Trampoline](trampoline.md)
