@@ -34,7 +34,7 @@ Supervisor mode 即为内核所在的特权级，会完成内核绝大多数的�
 
 User mode 为用户程序所在的特权级。
 
-RISCV 根据不同的需求，设计了一套同步和一套异步的切换机制。具体机制会在后面详细解释。
+RISCV 根据不同的需求，设计了一套同步和一套异步的切换机制，具体参见[陷入 (Trap)、中断 (Interrupt) 与异常 (Exception) 介绍](trap_interrupt_exception.md)。
 
 ### 内存管理
 
