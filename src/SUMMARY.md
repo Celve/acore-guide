@@ -21,4 +21,5 @@
   - [用户态与内核态切换](user_kernel_switch.md)
     - [Trampoline](trampoline.md)
     - [处理用户态的 Trap](user_trap.md)
+    - [系统调用](syscall.md)
   - [应用地址空间](app_address_space.md)
