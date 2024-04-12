@@ -23,6 +23,6 @@
     - [处理用户态的 Trap](user_trap.md)
     - [系统调用](syscall.md)
   - [用户态程序](user_app.md)
-    - [系统调用接口](system_call_interface.md)
+    - [系统调用接口](syscall_interface.md)
     - [装载应用](load_user_app.md)
     - [应用地址空间](app_address_space.md)
