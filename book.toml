@@ -9,3 +9,6 @@ title = "ACore Guide"
 git-repository-url = "https://github.com/celve/acore-guide"
 git-repository-icon = "fa-github"
 mathjax-support = true
+
+[output.html.playground]
+runnable = false
