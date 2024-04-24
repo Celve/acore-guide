@@ -25,46 +25,47 @@ Service 是 microkernel 的核心组件之一。我们先来看一下 microkerne
 
 ![overview](assets/overview.png)
 
-这张图描述了一个用户程序进行 `sys_open` 的全过程。
+这张图描述了一个用户程序进行 `sys_open` 的完整流程。
 
-在左上角的 **app** 处：
+**开始于应用程序（App）**：
 
-- 用户程序通过 `syscall` 进入内核态，并传递参数，譬如 `syscall number`，`path`，`flags` 等；
-- 内核态的 syscall handler 会根据 `syscall number` 调用对应的服务；在这个例子中，我们需要获得 `path` 对应的文件，所以，内核线程通过 IPC 调用 **file system serivce**；
-- 由于我们需要等待 file system service 的响应，所以内核线程会进入等待状态，并切换到 **scheduler**。
+- 用户程序发起一个 `syscall` 进入内核态，并传递相关参数如 `syscall number`、`path` 和 `flags`。
+- 内核态的 `syscall handler` 根据 `syscall number` 调用相应的服务。在本例中，需要获取某个路径（`path`）下的文件，因此内核线程通过 IPC 请求 **文件系统服务（File System Service）**。
+- 请求发出后，内核线程进入等待状态，并切换到 **调度器（Scheduler）** 管理。
 
-到了 **scheduler**：
+**调度器（Scheduler）过程**：
 
-- **Scheduler** 会根据当前的任务队列，依照内部算法，选择下一个任务；
-- 由于我们对于文件系统的调用是异步的，所以 **scheduler** 选择的下一个任务不一定是 **file system service**，这里假设我们在第 A 个任务选择了 **file system service**；同理，我们假设在第 B 个任务选择了 **driver service**，以此类推。
+- 调度器根据任务队列和调度算法，选择下一个要执行的服务。此例中，假设它先后选择了 **文件系统服务** 和 **驱动服务（Driver Service）**。
 
-到了 **file system**：
+**在文件系统服务（File System Service）**：
 
-- 我们从内核线程切换到用户线程（**file system service** 是 U mode 的）, **file system service** 会尝试根据 **path** 找到对应的文件，并返回给内核线程；
-- 但在这个过程中，**file system service** 需要访问 block device 来读取一些数据以找到对应的文件，于是用户线程通过 IPC 调用 **driver service**；
-- 其后用户线程切换到内核线程，内核线程随后切换到 **scheduler**。
+- 系统从内核线程切换至用户线程（U模式），**文件系统服务** 尝试根据 `path` 查找文件，并将结果返回给内核线程。
+- **文件系统服务** 需要访问块设备（block device）以获得数据，因此又通过 IPC 请求 **驱动服务**。
+- 请求完成后，用户线程切换回内核线程，并再次转至 **调度器**。
 
-到了 **scheduler**：
+**再次到调度器（Scheduler）**：
 
-- **Scheduler** 会根据当前的任务队列，依照内部算法，选择下一个任务；限于篇幅，以后的 **scheduler** 部分不再赘述。
+- 根据当前任务队列，**调度器** 再次选择下一个要执行的任务。
 
-到了 **driver**：
+**在驱动服务（Driver Service）**：
 
-- 首先切换到应用线程，`block device` 会读取对应的 `block`，并返回给 **file system service**；
-- 其后用户线程切换到内核线程，内核线程随后切换到 **scheduler**。
+- 驱动服务操作块设备读取数据，完成后将数据返回至 **文件系统服务**。
+- 数据交换完毕后，控制权再次返回 **调度器**。
 
-到了 **file system**：
+**返回到文件系统服务**：
 
-- 在与 **driver service** 交互找到对应的文件后，返回给 **app** 对应的内核线程。
+- **文件系统服务** 获取到所需数据，并最终找到文件，将文件信息传递回最初请求的 **应用程序** 的内核线程。
 
-到了 **app**：
+**回到应用程序（App）**：
 
-- 内核线程在找到对应的文件后，通过 IPC 联系 **process manager** 准备创建一个新的 file descriptor。
+- 内核线程收到文件信息，随后联系 **进程管理器（Process Manager）**，以便为文件创建一个新的文件描述符。
 
-到了 **process manager**：
+**在进程管理器（Process Manager）**：
 
-- **process manager** 会为 **app** 创建一个新的 file descriptor，并返回给 **app**。
+- **进程管理器** 为 **应用程序** 创建并返回新的文件描述符。
 
-到了 **app**：
+**结束于应用程序（App）**：
 
-- **app** 中的内核线程会收到 **process manager** 的返回，并返回给用户程序。
+- **应用程序** 的内核线程接收到文件描述符后，完成整个 `sys_open` 调用，并将控制权返回给用户程序。
+
+通过这一整套流程，可以清楚地看出微内核系统中各个服务的协作方式，以及进程间通信的重要作用。
