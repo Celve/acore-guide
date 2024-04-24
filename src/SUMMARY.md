@@ -30,5 +30,5 @@
     - [应用地址空间](app_address_space.md)
   - [多任务](multitask.md)
     - [Unix 多进程用例](unix_multiprocess_usage.md)
-    - [切换内核线程](switch_kernel_thread.md)
     - [服务](service.md)
+    - [切换内核线程](switch_kernel_thread.md)
