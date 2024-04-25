@@ -23,7 +23,7 @@ Service 是 microkernel 的核心组件之一。我们先来看一下 microkerne
 
 我们可以用一张图来总结上述 services 之间的关系：
 
-![overview](assets/overview.png)
+![overview](assets/service.png)
 
 这张图描述了一个用户程序进行 `sys_open` 的完整流程。
 
@@ -49,7 +49,7 @@ Service 是 microkernel 的核心组件之一。我们先来看一下 microkerne
 
 **在驱动服务（Driver Service）**：
 
-- 驱动服务操作块设备读取数据，完成后将数据返回至 **文件系统服务**。
+- **驱动服务**操作块设备读取数据，完成后将数据返回至 **文件系统服务**。
 - 数据交换完毕后，控制权再次返回 **调度器**。
 
 **返回到文件系统服务**：
