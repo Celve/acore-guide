@@ -29,4 +29,4 @@ Link 中最重要的是我们需要制定 `.text` 的位置，这样我们才能
 rust-objcopy --binary-architecture=riscv64 --strip-all -O binary target/riscv64gc-unknown-none-elf/debug/user target/riscv64gc-unknown-none-elf/debug/user.bin
 ```
 
-之后我们需要把 binary 文件加载进内存，并让内核理解并执行之。
+之后我们需要把 binary 文件加载进内存，并让内核理解并执行之。关于内核读取 ELF 的部分，将在[下一章节](app_address_space.md)中讲解。
