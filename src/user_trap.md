@@ -44,3 +44,9 @@ Trampoline 的 `user_trap` 最后会跳转到一个内核中的函数，这个�
 在中断的所有 `scause` 中，我们只会遇到 supervisor software interrupt（软中断）和 supervisor external interrupt（外部中断）。软中断通常被用来在时钟中断时发起。外部中断意味着有硬件触发了中断。这个设备可以是 UART，也可以是 VIRTIO 的 IRQ（后面会在 FS 中介绍）。
 
 在异常的所有 `scause` 中，较为常见的是 environment call from U-mode，也就是用户态发起的系统调用。此外，你还可以按需处理各种 page fault，以及其他的错误。
+
+## Debug
+
+`scause` 寄存器是一个很好的调试信息。你可以在 trap 处理函数中打印这个值，以便更好地了解发生了什么。
+
+当你的程序出现了异常，你可以通过这个值来判断异常的原因。比如，如果你的程序出现了 page fault，你可以通过 `scause` 的值来判断是哪种 page fault，然后进一步调试。
