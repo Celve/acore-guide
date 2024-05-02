@@ -25,3 +25,15 @@
 <p align="center">
   <img src="assets/switch.png" width="50%">
 </p>
+
+## 任务
+
+我们调度的最小粒度是任务。任务是一个内核线程的抽象，它包含了线程的上下文信息，以及一些其他信息，比如任务的状态等。以下是一个任务的结构：
+
+```rust
+struct Task {
+    context: TaskContext,
+    state: TaskState,
+    // ..., other field for scheduling or something else
+ 
+```
