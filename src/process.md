@@ -1,27 +1,35 @@
 # 进程
 
-进程的结构如下所示：
+## 进程结构
+
+在微内核设计中，进程（Process）在进程管理器（Process Manager）中进行维护。进程管理器是一个服务，负责创建、销毁和管理进程。它还负责为进程分配资源，例如文件描述符等。
+
+以下是一个进程结构的示例：
 
 ```rust
 struct Process {
-    pid: usize, // process ID
-    vmspace: VmSpace, // virtual memory space
-    pagetable: VirAddr, // page table
-    state: ProcessState, // process state
-    parent: Option<Weak<Process>>, // parent process
-    children: Vec<Arc<Process>>, // children processes
-    fdtable: FdTable, // file descriptor table
+    pid: usize, // 进程ID，唯一标识一个进程。
+    vmspace: VmSpace, // 进程的虚拟内存空间
+    pagetable: VirAddr, // 用于内存管理的页表，必须在内核态中进行分配，因为需要操作包含物理地址的页表
+    state: ProcessState, // 进程的当前状态（例如 active、dead 等）
+    parent: Option<Weak<Process>>, // 指向父进程的弱引用
+    children: Vec<Arc<Process>>, // 包含所有子进程的引用
+    fdtable: FdTable, // 进程的文件描述符表
 }
 ```
 
-在微内核的设计中，process 在 process manager 中进行维护。process manager 是一个服务，它负责创建、销毁和管理 processes。Process manager 也负责为 process 分配资源，比如文件描述符等。
-
-需要注意的是，page table 的 allocation 必须在内核态中进行（因为需要操作页表，其中包含了物理地址）。
-
 ## 与任务的关系
 
-在 [切换内核进程](switch.md) 中，我们提到了 [任务](task.md) 。需要明确的是，进程与任务虽有交集，但本质上是两个不同的概念。
+在[切换内核进程](switch.md)中，我们提到了[任务](task.md)。需要明确的是，进程与任务虽有交集，但本质上是两个不同的概念。
 
-**进程**作为资源分配的单元，相对独立，并且在操作系统中具有各自的内存和系统资源。它们是系统资源管理和分配的基础，使得多个程序能在多任务操作系统中同时运行而互不干扰。
+**进程**是资源分配的基本单元，相对独立，并且在操作系统中具有各自的内存和系统资源。它们是系统资源管理和分配的基础，使得多个程序能在多任务操作系统中同时运行而互不干扰。
 
-而**任务**通常指被调度器调度的执行单元。**任务**包含了一切与执行调度相关的信息。
+**任务**通常指被调度器调度的执行单元。任务包含了一切与执行调度相关的信息。
+
+在进程管理器中维护的进程信息，更多的是一些**与调度无关的基础信息**，例如文件描述符表、父进程和子进程等。这些信息在调度中不需要，所以并不需要将它们保存在内核的任务结构中。相应地，它们被保存在用户态的进程管理器里。
+
+所以，在调度器中，我们只需要访问任务结构，而不需要访问进程结构。进程结构只在进程管理器中使用。
+
+## 页表
+
+需要注意的是，进程的页表是在内核态中分配的。这是因为页表中包含了物理地址，而用户态无法直接访问物理地址（除非配置 identical mapping）。因此，页表的分配必须在内核态中进行。
